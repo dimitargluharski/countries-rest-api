@@ -3,8 +3,8 @@ import { CatalogListItems } from "./CatalogListItems"
 import { FiltersPanel } from "./Filters"
 
 export const Catalog = () => {
-  return(
-    <div className="bg-red-500 flex w-full">
+  return (
+    <div className="flex w-full">
       <FiltersPanel />
       <CatalogListItems />
       <BuildingPlace />
