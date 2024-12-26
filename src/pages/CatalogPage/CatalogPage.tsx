@@ -67,20 +67,22 @@ export const CatalogPage = () => {
             value={query}
           />
           <div>
-            {filteredArray.map((c, index) => (
-              <div
-                key={index}
-                className="flex items-center gap-2 py-2 hover:underline cursor-pointer"
-              >
-                <img
-                  className="w-5 h-5"
-                  src={c.flags.png}
-                  alt={c.name.common}
-                  title={c.name.common}
-                />
-                <div>{c.name.common}</div>
-              </div>
-            ))}
+            {filteredArray
+              .sort((a, b) => a.name.common.localeCompare(b.name.common))
+              .map((c, index) => (
+                <div
+                  key={index}
+                  className="flex items-center gap-2 py-2 hover:underline cursor-pointer"
+                >
+                  <img
+                    className="w-5 h-5"
+                    src={c.flags.png}
+                    alt={c.name.common}
+                    title={c.name.common}
+                  />
+                  <div>{c.name.common}</div>
+                </div>
+              ))}
           </div>
         </main>
         <aside className="flex-1">
