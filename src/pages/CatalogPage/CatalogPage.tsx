@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { LeafletMap } from "./LeafletMap";
 import { formatNumber } from "../../utils/formatNumber";
 
 type Name = {
@@ -12,7 +13,7 @@ type Flags = {
   svg: string;
 };
 
-interface CountryProps {
+export interface CountryProps {
   name: Name;
   flags: Flags;
   language: string;
@@ -24,15 +25,22 @@ export const CatalogPage = () => {
   const [data, setData] = useState<CountryProps[]>([]);
   const [query, setQuery] = useState<string>("");
   const [filteredArray, setFilteredArray] = useState<CountryProps[]>([]);
+  const [countryDetails, setCountryDetails] = useState<CountryProps | null>(
+    null
+  );
 
   useEffect(() => {
     fetch("https://restcountries.com/v3.1/all")
-      .then((data) => data.json())
-      .then((response) => {
-        setData(response);
-        setFilteredArray(response);
+      .then((response) => response.json())
+      .then((countries) => {
+        setData(countries);
+        setFilteredArray(countries);
       })
-      .catch((err) => console.log("error", err));
+      .catch((err) => {
+        console.error("Error fetching data", err);
+        setData([]);
+        setFilteredArray([]);
+      });
   }, []);
 
   const handleQuery = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,54 +49,63 @@ export const CatalogPage = () => {
 
     if (value === "") {
       setFilteredArray(data);
+    } else {
+      const filterByName = data.filter((country) =>
+        country.name.common.toLowerCase().includes(value.toLowerCase())
+      );
+      setFilteredArray(filterByName);
     }
-
-    const filterByName = data.filter((country) =>
-      country.name.common.toLowerCase().includes(value.toLowerCase())
-    );
-
-    setFilteredArray(filterByName);
   };
 
   const totalPopulation = data.reduce((accumulator, currentValue) => {
-    return (accumulator += currentValue.population);
+    return accumulator + currentValue.population;
   }, 0);
+
+  const handleCountryDetails = (country: CountryProps) => {
+    setCountryDetails(country);
+  };
+
+  const sortedArray = [...filteredArray].sort((a, b) =>
+    a.name.common.localeCompare(b.name.common)
+  );
 
   return (
     <section className="flex flex-col w-full p-4">
       <div className="flex w-full gap-4">
         <main className="flex flex-col flex-1 p-2 rounded-lg bg-slate-300">
-          {filteredArray.length} countries / {formatNumber(totalPopulation)}{" "}
+          <div>
+            {filteredArray.length} countries / {formatNumber(totalPopulation)}
+          </div>
           <input
             type="text"
             placeholder="Search..."
-            className="p-2 border rounded-lg"
+            className="p-2 border rounded-lg w-full mb-4"
             onChange={handleQuery}
             value={query}
           />
           <div>
-            {filteredArray
-              .sort((a, b) => a.name.common.localeCompare(b.name.common))
-              .map((c, index) => (
-                <div
-                  key={index}
-                  className="flex items-center gap-2 py-2 hover:underline cursor-pointer"
-                >
-                  <img
-                    className="w-5 h-5"
-                    src={c.flags.png}
-                    alt={c.name.common}
-                    title={c.name.common}
-                  />
-                  <div>{c.name.common}</div>
-                </div>
-              ))}
+            {sortedArray.map((country, index) => (
+              <div
+                key={index}
+                className="flex items-center gap-2 py-2 hover:underline cursor-pointer"
+                onClick={() => handleCountryDetails(country)}
+              >
+                <img
+                  className="w-5 h-5"
+                  src={country.flags.png}
+                  alt={country.name.common}
+                  title={country.name.common}
+                />
+                {country.name.common}
+              </div>
+            ))}
           </div>
         </main>
-        <aside className="flex-1">
-          <h2>Details</h2>
 
-          <div></div>
+        <aside className="flex-1">
+          <div className="w-full h-36">
+            <LeafletMap data={countryDetails} />
+          </div>
         </aside>
       </div>
     </section>
