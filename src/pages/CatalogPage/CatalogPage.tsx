@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { LeafletMap } from "./LeafletMap";
 import { formatNumber } from "../../utils/formatNumber";
+import { Weather } from "./Weather";
 
 type Name = {
   common: string;
@@ -105,6 +106,7 @@ export const CatalogPage = () => {
         <aside className="flex-1">
           <div className="w-full h-36">
             <LeafletMap data={countryDetails} />
+            <Weather data={countryDetails} />
           </div>
         </aside>
       </div>
