@@ -38,17 +38,23 @@ export const Weather = ({ data }: any) => {
     <div className="flex flex-col">
       <div className="flex items-center">Country: {officialName}</div>
       <div>
+        {/* @ts-ignore */}
         Capital: {weather?.location?.name} ({weather?.location?.country})
       </div>
       <div className="flex items-center">
+        {/* @ts-ignore */}
         Temp: {weather?.current?.temp_c}
         <TbTemperatureCelsius className="h-5 w-5" />
       </div>
       <div className="flex items-center">
+        {/* @ts-ignore */}
+
         {weather?.current?.condition?.text}
         <img
           className="w-8 h-8"
+          // @ts-ignore
           src={weather?.current?.condition?.icon}
+          // @ts-ignore
           alt={weather?.current?.condition?.text}
         />
       </div>
