@@ -5,15 +5,15 @@ function App() {
   return (
     <>
       <Routes>
-        <Route
+        {/* <Route
           path="/"
           element={
             <div>
               go to catalog page <Link to="/catalog">here</Link>
             </div>
           }
-        />
-        <Route path="/catalog" element={<CatalogPage />} />
+        /> */}
+        <Route path="/" element={<CatalogPage />} />
       </Routes>
     </>
   );
