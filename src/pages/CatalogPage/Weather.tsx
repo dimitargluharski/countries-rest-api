@@ -16,7 +16,7 @@ export const Weather = ({ data }: any) => {
       return;
     }
 
-    const url = `http://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${capital}`;
+    const url = `https://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${capital}`;
     fetch(url)
       .then((res) => {
         if (!res.ok) {
